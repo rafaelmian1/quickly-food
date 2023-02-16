@@ -32,7 +32,7 @@ const adminProductControllers = {
       })
       let picture
       const { img } = req.files
-      picture = `/${newProduct._id}.${
+      picture = `/assets/products/${newProduct._id}.${
         img.name.split('.')[img.name.split('.').length - 1]
       }`
       img.mv(

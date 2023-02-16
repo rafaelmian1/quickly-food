@@ -23,7 +23,7 @@ const userControllers = {
       let picture
       if (req.files) {
         const { fileImg } = req.files
-        picture = `${newUser._id}.${
+        picture = `/assets/users/${newUser._id}.${
           fileImg.name.split('.')[fileImg.name.split('.').length - 1]
         }`
         fileImg.mv(
