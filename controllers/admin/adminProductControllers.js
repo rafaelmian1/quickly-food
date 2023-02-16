@@ -36,7 +36,7 @@ const adminProductControllers = {
         img.name.split('.')[img.name.split('.').length - 1]
       }`
       img.mv(
-        `${__dirname}/../../assets/products/${newProduct._id}.${
+        `${__dirname}/../../client/build/assets/products/${newProduct._id}.${
           img.name.split('.')[img.name.split('.').length - 1]
         }`,
         (err) => {
