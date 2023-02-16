@@ -4,12 +4,16 @@
 
 import React, { useState } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
-import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js'
+import {
+  CardElement,
+  Elements,
+  useElements,
+  useStripe,
+} from '@stripe/react-stripe-js'
 import { connect } from 'react-redux'
 import userActions from '../redux/actions/userActions'
 import styles from '../styles/rafacard.module.css'
-import axios from 'axios'
-const HOST = 'https://quickly-food.herokuapp.com'
+import apiClient from '../api/client'
 
 const CARD_OPTIONS = {
   iconStyle: 'solid',
@@ -45,7 +49,16 @@ const CardField = ({ onChange }) => (
   </div>
 )
 
-const Field = ({ label, id, type, placeholder, required, autoComplete, value, onChange }) => (
+const Field = ({
+  label,
+  id,
+  type,
+  placeholder,
+  required,
+  autoComplete,
+  value,
+  onChange,
+}) => (
   <div className={styles.FormRow}>
     <label htmlFor={id} className={styles.FormRowLabel}>
       {label}
@@ -70,7 +83,11 @@ const Field = ({ label, id, type, placeholder, required, autoComplete, value, on
 )
 
 const SubmitButton = ({ processing, error, children, disabled, onclick }) => (
-  <button style={{ backgroundColor: '#a84531d0', width: '40%' }} type='submit' disabled={processing || disabled}>
+  <button
+    style={{ backgroundColor: '#a84531d0', width: '40%' }}
+    type='submit'
+    disabled={processing || disabled}
+  >
     {processing ? 'Processing...' : children}
   </button>
 )
@@ -92,7 +109,10 @@ const ErrorMessage = ({ children }) => (
 )
 
 const ResetButton = ({ onClick }) => (
-  <button className={[styles.SubmitButton, { height: '5vh' }]} onClick={onClick}>
+  <button
+    className={[styles.SubmitButton, { height: '5vh' }]}
+    onClick={onClick}
+  >
     <svg width='32px' height='32px' viewBox='0 0 32 32'>
       <path
         fill='#FFF'
@@ -140,7 +160,7 @@ const CheckoutForm = ({ updateUser, userData, setCardModal }) => {
       billing_details: billingDetails,
     })
 
-    const response = await axios.post(`${HOST}/api/attach-payment-method`, {
+    const response = await apiClient.post(`/attach-payment-method`, {
       id: payload.paymentMethod.id,
       customer: userData?.data?.customerId,
     })
@@ -176,7 +196,9 @@ const CheckoutForm = ({ updateUser, userData, setCardModal }) => {
       {/* <div className={styles.ResultTitle} role='alert'>
         Payment successful
       </div> */}
-      <div className={styles.ResultMessage}>Método de pago generado: {paymentMethod.id}</div>
+      <div className={styles.ResultMessage}>
+        Método de pago generado: {paymentMethod.id}
+      </div>
       <ResetButton onClick={reset} />
     </div>
   ) : (
@@ -245,13 +267,19 @@ const ELEMENTS_OPTIONS = {
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
-const stripePromise = loadStripe('pk_test_51JiHmiD8MtlvyDMXOy1Xz9IRz7S6hXvSX3YorvlFJSNbByoEHqgmIhvVuOuYgA3PiOR9hxBM0QzQcf6OlJs4VYgI00pB5OSjXZ')
+const stripePromise = loadStripe(
+  'pk_test_51JiHmiD8MtlvyDMXOy1Xz9IRz7S6hXvSX3YorvlFJSNbByoEHqgmIhvVuOuYgA3PiOR9hxBM0QzQcf6OlJs4VYgI00pB5OSjXZ'
+)
 
 const Card = ({ updateUser, userData, setCardModal }) => {
   return (
     <div className={styles.AppWrapper}>
       <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
-        <CheckoutForm updateUser={updateUser} userData={userData} setCardModal={setCardModal} />
+        <CheckoutForm
+          updateUser={updateUser}
+          userData={userData}
+          setCardModal={setCardModal}
+        />
       </Elements>
     </div>
   )

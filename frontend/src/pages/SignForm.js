@@ -26,7 +26,10 @@ const MyInput = ({ label, name, inputHandler }) => {
       InputProps={{
         endAdornment: (
           <InputAdornment position='end' style={{ width: '2rem' }}>
-            <IconButton onClick={(e) => setPassProtected(!passProtected)} edge='end'>
+            <IconButton
+              onClick={(e) => setPassProtected(!passProtected)}
+              edge='end'
+            >
               {passProtected ? <BsEyeSlash /> : <BsEye />}
             </IconButton>
           </InputAdornment>
@@ -80,7 +83,8 @@ const SignForm = (props) => {
   const inputHandler = (e) => {
     setUser({
       ...user,
-      [e.target.name]: e.target.name === 'src' ? e.target.files[0] : e.target.value,
+      [e.target.name]:
+        e.target.name === 'src' ? e.target.files[0] : e.target.value,
     })
   }
 
@@ -94,9 +98,27 @@ const SignForm = (props) => {
           view: true,
         })
       } else {
-        if (!user.email.includes('@')) return setCardTost({ time: 1500, icon: 'error', text: 'El mail no es valido', view: true })
-        if (!user.email) return setCardTost({ time: 1500, icon: 'error', text: 'Ingresa tu mail', view: true })
-        if (!user.password) return setCardTost({ time: 1500, icon: 'error', text: 'Ingresa tu contraseña', view: true })
+        if (!user.email.includes('@'))
+          return setCardTost({
+            time: 1500,
+            icon: 'error',
+            text: 'El mail no es valido',
+            view: true,
+          })
+        if (!user.email)
+          return setCardTost({
+            time: 1500,
+            icon: 'error',
+            text: 'Ingresa tu mail',
+            view: true,
+          })
+        if (!user.password)
+          return setCardTost({
+            time: 1500,
+            icon: 'error',
+            text: 'Ingresa tu contraseña',
+            view: true,
+          })
       }
     } else {
       if (
@@ -104,15 +126,62 @@ const SignForm = (props) => {
           .slice(0, 5)
           .every((property) => !user[property])
       ) {
-        setCardTost({ time: 1500, icon: 'error', text: 'Complete todos los campos', view: true })
+        setCardTost({
+          time: 1500,
+          icon: 'error',
+          text: 'Complete todos los campos',
+          view: true,
+        })
       } else {
-        if (!user.firstName) return setCardTost({ time: 1500, icon: 'error', text: 'Ingresa tu Nombre', view: true })
-        if (!user.lastName) return setCardTost({ time: 1500, icon: 'error', text: 'Ingresa tu Apellido', view: true })
-        if (!user.email) return setCardTost({ time: 1500, icon: 'error', text: 'Ingresa tu mail', view: true })
-        if (!user.email.includes('@')) return setCardTost({ time: 1500, icon: 'error', text: 'El mail no es valido', view: true })
-        if (!user.password) return setCardTost({ time: 1500, icon: 'error', text: 'Ingresa tu contraseña', view: true })
-        if (!user.repPass) return setCardTost({ time: 1500, icon: 'error', text: 'Valide su contraseña', view: true })
-        if (user.password !== user.repPass) return setCardTost({ time: 1500, icon: 'error', text: 'La contraseña no coinciden', view: true })
+        if (!user.firstName)
+          return setCardTost({
+            time: 1500,
+            icon: 'error',
+            text: 'Ingresa tu Nombre',
+            view: true,
+          })
+        if (!user.lastName)
+          return setCardTost({
+            time: 1500,
+            icon: 'error',
+            text: 'Ingresa tu Apellido',
+            view: true,
+          })
+        if (!user.email)
+          return setCardTost({
+            time: 1500,
+            icon: 'error',
+            text: 'Ingresa tu mail',
+            view: true,
+          })
+        if (!user.email.includes('@'))
+          return setCardTost({
+            time: 1500,
+            icon: 'error',
+            text: 'El mail no es valido',
+            view: true,
+          })
+        if (!user.password)
+          return setCardTost({
+            time: 1500,
+            icon: 'error',
+            text: 'Ingresa tu contraseña',
+            view: true,
+          })
+        if (!user.repPass)
+          return setCardTost({
+            time: 1500,
+            icon: 'error',
+            text: 'Valide su contraseña',
+            view: true,
+          })
+        if (user.password !== user.repPass)
+          return setCardTost({
+            time: 1500,
+            icon: 'error',
+            text: 'La contraseña no coinciden',
+            view: true,
+          })
       }
     }
   }
@@ -122,7 +191,13 @@ const SignForm = (props) => {
       return Boolean(user.email && user.email.includes('@') && user.password)
     } else {
       return Boolean(
-        user.firstName && user.lastName && user.email && user.email.includes('@') && user.password && user.repPass && user.password === user.repPass
+        user.firstName &&
+          user.lastName &&
+          user.email &&
+          user.email.includes('@') &&
+          user.password &&
+          user.repPass &&
+          user.password === user.repPass
       )
     }
   }
@@ -147,10 +222,14 @@ const SignForm = (props) => {
 
   return (
     <main className={styles.mainSign}>
-      {cardTost.view && <CardTost properties={cardTost} setCardTost={setCardTost} />}
+      {cardTost.view && (
+        <CardTost properties={cardTost} setCardTost={setCardTost} />
+      )}
       <div className={styles.boxButtons}>
         <div className={styles.boxlogin}>
-          <h1 className={styles.h1}>{shift ? 'Crear una cuenta' : 'Ingresar con tus datos'}</h1>
+          <h1 className={styles.h1}>
+            {shift ? 'Crear una cuenta' : 'Ingresar con tus datos'}
+          </h1>
           <div className={styles.boxGoogle}>
             <GoogleLogin
               className={styles.btnGoogle}
@@ -168,12 +247,22 @@ const SignForm = (props) => {
               <hr className={styles.line}></hr>
             </div> */}
         </div>
-        <img className={styles.memeLogin} src='https://i.postimg.cc/rFQ6QKxZ/memelogin.png' alt='manLog' />
+        <img
+          className={styles.memeLogin}
+          src='https://i.postimg.cc/rFQ6QKxZ/memelogin.png'
+          alt='manLog'
+        />
         <div className={styles.boxButton}>
-          <p className={!shift ? styles.activeButton : styles.button} onClick={() => setShift(false)}>
+          <p
+            className={!shift ? styles.activeButton : styles.button}
+            onClick={() => setShift(false)}
+          >
             Ingresá
           </p>
-          <p className={shift ? styles.activeButton : styles.button} onClick={() => setShift(true)}>
+          <p
+            className={shift ? styles.activeButton : styles.button}
+            onClick={() => setShift(true)}
+          >
             Registrate
           </p>
         </div>
@@ -204,7 +293,11 @@ const SignForm = (props) => {
                   // error
                   // helperText="Incorrect entry."
                 />
-                <MyInput label='Contraseña' name='password' inputHandler={inputHandler} />
+                <MyInput
+                  label='Contraseña'
+                  name='password'
+                  inputHandler={inputHandler}
+                />
               </div>
             </Box>
           ) : (
@@ -259,14 +352,31 @@ const SignForm = (props) => {
                     // error
                     // helperText="Incorrect entry."
                   />
-                  <MyInput label='Contraseña' name='password' inputHandler={inputHandler} />
-                  <MyInput label='Repite contraseña' name='repPass' inputHandler={inputHandler} />
+                  <MyInput
+                    label='Contraseña'
+                    name='password'
+                    inputHandler={inputHandler}
+                  />
+                  <MyInput
+                    label='Repite contraseña'
+                    name='repPass'
+                    inputHandler={inputHandler}
+                  />
                 </div>
                 <div className={styles.boxFile}>
                   <label htmlFor='Foto'>
-                    <span className={styles.submitPhoto}>{user?.src ? 'Foto cargada' : 'Cargar foto de perfil'}</span>
+                    <span className={styles.submitPhoto}>
+                      {user?.src ? 'Foto cargada' : 'Cargar foto de perfil'}
+                    </span>
                   </label>
-                  <input id='Foto' style={{ display: 'none' }} type='file' name='src' placeholder='Agregá una foto de perfil' onChange={inputHandler} />
+                  <input
+                    id='Foto'
+                    style={{ display: 'none' }}
+                    type='file'
+                    name='src'
+                    placeholder='Agregá una foto de perfil'
+                    onChange={inputHandler}
+                  />
                 </div>
               </div>
             </Box>

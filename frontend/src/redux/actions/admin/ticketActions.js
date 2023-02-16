@@ -1,10 +1,10 @@
-import axios from 'axios'
-const HOST = 'https://quickly-food.herokuapp.com'
+import apiClient from '../../../api/client'
+
 const ticketActions = {
   createTicket: (ticket) => {
     return async () => {
       try {
-        await axios.post(`${HOST}/api/tickets`, ticket)
+        await apiClient.post(`/tickets`, ticket)
       } catch (err) {
         console.log(err.message)
       }
@@ -12,7 +12,7 @@ const ticketActions = {
   },
   getTickets: () => {
     return async (dispatch) => {
-      let res = await axios.get(`${HOST}/api/tickets`)
+      let res = await apiClient.get(`/tickets`)
       dispatch({ type: 'SET_TICKETS', payload: res.data })
     }
   },

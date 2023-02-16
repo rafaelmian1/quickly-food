@@ -1,11 +1,10 @@
-import axios from 'axios'
-const HOST = 'https://quickly-food.herokuapp.com'
+import apiClient from '../../api/client'
 
 const orderActions = {
   getUserOders: (userId) => {
     return async (dispatch) => {
       try {
-        const res = await axios.get(`${HOST}/api/orders`, userId)
+        const res = await apiClient.get(`/orders`, userId)
         if (!res.data.success) throw new Error(res.data.error)
         dispatch({ type: 'GET_USER_ORDERS', payload: res.data.response })
         return { success: true, response: res.data.response, error: null }
@@ -17,7 +16,11 @@ const orderActions = {
   createOrder: ({ props, order, firstName, action }) => {
     return async (dispatch) => {
       try {
-        const res = await axios.post(`${HOST}/api/orders`, { ...order, firstName, action })
+        const res = await apiClient.post(`/orders`, {
+          ...order,
+          firstName,
+          action,
+        })
         if (!res.data.success) throw new Error(res.data.error)
         const { newOrder, userData } = res.data.response
         dispatch({ type: 'CREATE_ORDER', payload: { newOrder, userData } })
@@ -32,7 +35,7 @@ const orderActions = {
   cancellOrder: ({ orderId, firstName, action }) => {
     return async (dispatch) => {
       try {
-        const res = await axios.put(`${HOST}/api/order/` + orderId)
+        const res = await apiClient.put(`/order/${orderId}`)
         if (!res.data.success) throw new Error(res.data.error)
         const { orderCancelled, products } = res.data.response
         dispatch({ type: 'EMIT_CANCELL' })

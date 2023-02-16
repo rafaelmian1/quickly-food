@@ -1,11 +1,10 @@
-import axios from 'axios'
-const HOST = 'https://quickly-food.herokuapp.com'
+import apiClient from '../../api/client'
 
 const productActions = {
   getProducts: () => {
     return async (dispatch) => {
       try {
-        const response = await axios.get(`${HOST}/api/products`)
+        const response = await apiClient.get(`/products`)
         if (!response.data.success) throw new Error(response.data.error)
         await dispatch({
           type: 'GET_PRODUCTS',

@@ -1,13 +1,12 @@
-import axios from 'axios'
+import apiClient from '../../api/client'
 import Swal from 'sweetalert2'
 import io from 'socket.io-client'
-const HOST = 'https://quickly-food.herokuapp.com'
 
 const userActions = {
   createUser: (user, props) => {
     return async (dispatch) => {
       try {
-        let res = await axios.post(`${HOST}/api/user/signUp`, user)
+        let res = await apiClient.post(`/user/signUp`, user)
         if (res.data.success) {
           const { user, userData, token } = res.data
           let keep = false
@@ -28,7 +27,7 @@ const userActions = {
             })
           window.scrollTo(0, 0)
           props.history.push('/')
-          let socket = io(`${HOST}`, {
+          let socket = io(``, {
             query: { socketId: userData._id, admin: false },
           })
           dispatch({ type: 'SET_SOCKET', payload: { socket } })
@@ -45,16 +44,18 @@ const userActions = {
   logUser: (user, props) => {
     return async (dispatch) => {
       try {
-        let res = await axios.post(`${HOST}/api/user/logIn`, { ...user })
+        let res = await apiClient.post(`/user/logIn`, { ...user })
         if (res.data.success) {
           const { user, userData, token } = res.data
           window.scrollTo(0, 0)
           props.history.push('/')
-          let socket = io(HOST, {
+          let socket = io('https://quickly-food.rafaelmiandev.com', {
             query: { socketId: userData._id, admin: userData.data.admin.flag },
           })
           dispatch({ type: 'SET_SOCKET', payload: { socket } })
-          let cart = localStorage.getItem('cart') && JSON.parse(localStorage.getItem('cart'))
+          let cart =
+            localStorage.getItem('cart') &&
+            JSON.parse(localStorage.getItem('cart'))
           if (cart.length > 0) {
             Swal.fire({
               title: 'Desea conservar el carrito actual?',
@@ -66,7 +67,10 @@ const userActions = {
               cancelButtonText: 'No',
             }).then(async (result) => {
               if (result.isConfirmed) {
-                let response = await axios.post(`${HOST}/api/products/keep-cart`, { cart, _id: userData._id })
+                let response = await apiClient.post(`/products/keep-cart`, {
+                  cart,
+                  _id: userData._id,
+                })
                 return dispatch({
                   type: 'LOG_IN',
                   payload: { user, userData: response.data.user, token },
@@ -95,11 +99,7 @@ const userActions = {
       let token = localStorage.getItem('token')
       try {
         if (!token) throw new Error('No hay token')
-        let response = await axios.get(`${HOST}/api/orders`, {
-          headers: {
-            Authorization: 'Bearer ' + token,
-          },
-        })
+        let response = await apiClient.get(`/orders`)
         const { ordersId } = response.data
         dispatch({ type: 'UPDATE_USER_ORDERS', payload: ordersId })
       } catch (error) {
@@ -118,12 +118,8 @@ const userActions = {
       let token = localStorage.getItem('token')
       try {
         if (!token) throw new Error('No hay token')
-        let response = await axios.get(`${HOST}/api/user/token`, {
-          headers: {
-            Authorization: 'Bearer ' + token,
-          },
-        })
-        let socket = io(HOST, {
+        let response = await apiClient.get(`/user/token`)
+        let socket = io('https://quickly-food.rafaelmiandev.com', {
           query: {
             socketId: response.data.userData._id,
             admin: response.data.userData.data.admin.flag,
@@ -146,7 +142,10 @@ const userActions = {
       if (!token) {
         let cart = JSON.parse(localStorage.getItem('cart'))
         if (body.action === 'deleteLS') {
-          localStorage.setItem('cart', JSON.stringify(cart.filter((item, index) => index !== body.index)))
+          localStorage.setItem(
+            'cart',
+            JSON.stringify(cart.filter((item, index) => index !== body.index))
+          )
           return dispatch({
             type: 'LS_CART',
             payload: cart.filter((item, index) => index !== body.index),
@@ -158,7 +157,7 @@ const userActions = {
         }
       } else {
         try {
-          let response = await axios.put(`${HOST}/api/products`, body)
+          let response = await apiClient.put(`/products`, body)
           if (!response?.data?.success) throw new Error('Algo salió mal')
           dispatch({
             type: 'GET_PRODUCTS',
@@ -177,13 +176,8 @@ const userActions = {
 
   favHandler: (body) => {
     return async (dispatch) => {
-      let token = localStorage.getItem('token')
       try {
-        let response = await axios.put(`${HOST}/api/products/favs`, body, {
-          headers: {
-            Authorization: 'Bearer ' + token,
-          },
-        })
+        let response = await apiClient.put(`/products/favs`, body)
         if (!response?.data?.success) throw new Error('Algo salió mal')
         dispatch({
           type: 'GET_PRODUCTS',
@@ -195,7 +189,17 @@ const userActions = {
       }
     }
   },
-  updateUser: ({ action, userData, fileImg, currentPassword, password, newPaymentCard, paymentCardId, newAddress, addressId }) => {
+  updateUser: ({
+    action,
+    userData,
+    fileImg,
+    currentPassword,
+    password,
+    newPaymentCard,
+    paymentCardId,
+    newAddress,
+    addressId,
+  }) => {
     return async (dispatch) => {
       let token = localStorage.getItem('token')
       let body = fileImg || {
@@ -209,11 +213,7 @@ const userActions = {
         addressId,
       }
       try {
-        let res = await axios.put(`${HOST}/api/user`, body, {
-          headers: {
-            Authorization: 'Bearer ' + token,
-          },
-        })
+        let res = await apiClient.put(`/user`, body)
         return dispatch({
           type: 'LOG_IN',
           payload: { ...res.data, token, keep: true },

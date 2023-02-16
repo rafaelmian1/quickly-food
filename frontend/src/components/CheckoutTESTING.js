@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements } from '@stripe/react-stripe-js'
 import { connect } from 'react-redux'
-import axios from 'axios'
+import apiClient from '../api/client'
 import orderActions from '../redux/actions/orderActions'
-const HOST = 'https://quickly-food.herokuapp.com'
 
 const ELEMENTS_OPTIONS = {
   fonts: [
@@ -14,7 +13,9 @@ const ELEMENTS_OPTIONS = {
   ],
 }
 
-const stripePromise = loadStripe('pk_test_51JiHmiD8MtlvyDMXOy1Xz9IRz7S6hXvSX3YorvlFJSNbByoEHqgmIhvVuOuYgA3PiOR9hxBM0QzQcf6OlJs4VYgI00pB5OSjXZ')
+const stripePromise = loadStripe(
+  'pk_test_51JiHmiD8MtlvyDMXOy1Xz9IRz7S6hXvSX3YorvlFJSNbByoEHqgmIhvVuOuYgA3PiOR9hxBM0QzQcf6OlJs4VYgI00pB5OSjXZ'
+)
 
 const Card2 = ({ userData, index, cart, deliveryAddress, ...props }) => (
   <>
@@ -40,7 +41,15 @@ const mapDispatchToProps = {
 
 export default connect(mapStateToProps, mapDispatchToProps)(Card2)
 
-const CheckoutForm2 = ({ userData, paymentMethod, customer, createOrder, deliveryAddress, cart, ...props }) => {
+const CheckoutForm2 = ({
+  userData,
+  paymentMethod,
+  customer,
+  createOrder,
+  deliveryAddress,
+  cart,
+  ...props
+}) => {
   const [succeeded, setSucceeded] = useState(false)
   const [error, setError] = useState(null)
   const [processing, setProcessing] = useState('')
@@ -54,7 +63,10 @@ const CheckoutForm2 = ({ userData, paymentMethod, customer, createOrder, deliver
 
   const createPayment = async () => {
     const cart = JSON.parse(localStorage.getItem('cart'))
-    let res = await axios.post(`${HOST}/api/create-payment-intent`, { cart, customer })
+    let res = await apiClient.post(`/create-payment-intent`, {
+      cart,
+      customer,
+    })
     setpaymentIntent(res.data.paymentIntent.id)
   }
 
@@ -64,7 +76,7 @@ const CheckoutForm2 = ({ userData, paymentMethod, customer, createOrder, deliver
 
     if (!paymentIntent) return false
 
-    const payload = await axios.post(`${HOST}/api/confirm-payment-intent`, {
+    const payload = await apiClient.post(`/confirm-payment-intent`, {
       paymentIntent,
       payment_method: paymentMethod.id,
       customer,
@@ -85,14 +97,25 @@ const CheckoutForm2 = ({ userData, paymentMethod, customer, createOrder, deliver
       setError(null)
       setProcessing(false)
       setSucceeded(true)
-      createOrder({ props, order, firstName: userData.data.firstName, action: 'orderConfirm' })
+      createOrder({
+        props,
+        order,
+        firstName: userData.data.firstName,
+        action: 'orderConfirm',
+      })
     }
   }
 
   return (
     <form id='payment-form' onSubmit={handleSubmit}>
       <button disabled={processing || succeeded} id='submit'>
-        <span id='button-text'>{processing ? 'Procesando...' : succeeded ? 'Gracias por tu compra' : 'Pagá ahora'}</span>
+        <span id='button-text'>
+          {processing
+            ? 'Procesando...'
+            : succeeded
+            ? 'Gracias por tu compra'
+            : 'Pagá ahora'}
+        </span>
       </button>
       {error && (
         <div className='card-error' role='alert'>

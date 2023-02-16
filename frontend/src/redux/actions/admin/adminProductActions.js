@@ -1,13 +1,15 @@
-import axios from 'axios'
-const HOST = 'https://quickly-food.herokuapp.com'
+import apiClient from '../../../api/client'
 
 const adminProductActions = {
   getProducts: () => {
     return async (dispatch) => {
       try {
-        const response = await axios.get(`${HOST}/api/products`)
+        const response = await apiClient.get(`/products`)
         if (!response.data.success) throw new Error(response.data.error)
-        await dispatch({ type: 'GET_PRODUCTS', payload: response.data.response })
+        await dispatch({
+          type: 'GET_PRODUCTS',
+          payload: response.data.response,
+        })
         return { success: true, response: response.data.response }
       } catch (e) {
         return { success: false, response: null, error: e.message }
@@ -15,13 +17,8 @@ const adminProductActions = {
     }
   },
   createProduct: (product, props) => {
-    let token = localStorage.getItem('token')
     return async (dispatch) => {
-      let response = await axios.post(`${HOST}/api/admin/productos`, product, {
-        headers: {
-          Authorization: 'Bearer ' + token,
-        },
-      })
+      let response = await apiClient.post(`/admin/productos`, product)
       if (response.data.success) {
         await dispatch({ type: 'ADD_PRODUCT', payload: response.data.response })
         return response.data
@@ -29,13 +26,11 @@ const adminProductActions = {
     }
   },
   updateProduct: (updated, productId) => {
-    let token = localStorage.getItem('token')
     return async (dispatch) => {
-      let response = await axios.put(`${HOST}/api/admin/producto/` + productId, updated, {
-        headers: {
-          Authorization: 'Bearer ' + token,
-        },
-      })
+      let response = await apiClient.put(
+        `/admin/producto/${productId}`,
+        updated
+      )
       if (response.data.success) {
         await dispatch({ type: 'UPDATE_PRODUCT', payload: updated })
         return response.data
@@ -43,13 +38,8 @@ const adminProductActions = {
     }
   },
   deleteProduct: (productId) => {
-    let token = localStorage.getItem('token')
     return async (dispatch) => {
-      let response = await axios.delete(`${HOST}/api/admin/producto/` + productId, {
-        headers: {
-          Authorization: 'Bearer ' + token,
-        },
-      })
+      let response = await apiClient.delete(`/admin/producto/${productId}`)
       if (response.data.success) {
         await dispatch({ type: 'DELETE_PRODUCT', payload: productId })
         return response.data
