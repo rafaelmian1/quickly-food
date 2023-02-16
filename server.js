@@ -35,11 +35,13 @@ const PORT = process.env.PORT
 const HOST = process.env.HOST || '0.0.0.0'
 
 //Server listening
-const server = app.listen(PORT, HOST, () => console.log(`Server listening on port ${PORT} (${HOST})`))
+const server = app.listen(PORT, HOST, () =>
+  console.log(`Server listening on port ${PORT} (${HOST})`)
+)
 
 const io = socket(server, {
   cors: {
-    origin: 'https://quickly-food.herokuapp.com/',
+    origin: 'https://quickly-food.rafaelmiandev.com/',
     credentials: true,
   },
 })

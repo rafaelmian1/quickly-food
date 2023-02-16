@@ -45,7 +45,12 @@ const ProductList = (props) => {
   return (
     <tr>
       <td style={{ width: '15%' }}>
-        <div className={styles.profilePic} style={{ backgroundImage: `url('https://quickly-food.herokuapp.com${img}')` }}></div>
+        <div
+          className={styles.profilePic}
+          style={{
+            backgroundImage: `url('https://quickly-food.rafaelmiandev.com${img}')`,
+          }}
+        ></div>
       </td>
       <td style={{ width: '30%' }}>{name}</td>
       <td style={{ width: '20%' }}>{category}</td>
@@ -53,12 +58,22 @@ const ProductList = (props) => {
       <td style={{ width: '10%' }}>{stock}</td>
       <td className={styles.buttonsSection}>
         <Link to={`/admin/productos/editar/${_id}`}>
-          <Button variant='contained' color='info' size='small' onClick={() => props.setView('Editar Producto')}>
+          <Button
+            variant='contained'
+            color='info'
+            size='small'
+            onClick={() => props.setView('Editar Producto')}
+          >
             <MdEdit />
             Editar
           </Button>
         </Link>
-        <Button variant='outlined' color='error' size='small' onClick={() => verification(_id)}>
+        <Button
+          variant='outlined'
+          color='error'
+          size='small'
+          onClick={() => verification(_id)}
+        >
           <MdDelete />
           Borrar
         </Button>

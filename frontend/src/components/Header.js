@@ -10,7 +10,8 @@ const Header = (props) => {
   const [userMenu, setUserMenu] = useState(false)
   useEffect(() => {
     localStorage.getItem('token') && props.verifyToken()
-    !localStorage.getItem('cart') && localStorage.setItem('cart', JSON.stringify([]))
+    !localStorage.getItem('cart') &&
+      localStorage.setItem('cart', JSON.stringify([]))
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -24,7 +25,7 @@ const Header = (props) => {
     ? props.user.data.google || props.user.data.admin.flag
       ? props.user.data.src
       : props.user.data.src !== 'assets/user.png'
-      ? 'https://quickly-food.herokuapp.com/' + props.user.data.src
+      ? 'https://quickly-food.rafaelmiandev.com/' + props.user.data.src
       : '/assets/user.png'
     : '/assets/user.png'
 
@@ -45,24 +46,52 @@ const Header = (props) => {
       <div className={styles.boxNavigation}>
         <nav className={styles.containerNavegation}>
           <Link to='/'>
-            <img className={styles.logo} src='/assets/quicklyLogo.png' alt='logo' />
+            <img
+              className={styles.logo}
+              src='/assets/quicklyLogo.png'
+              alt='logo'
+            />
           </Link>
           <div className={styles.navegation}>
-            <NavLink className={styles.textRoute} exact activeClassName={styles.active} to='/' onClick={() => setUserMenu(false)}>
+            <NavLink
+              className={styles.textRoute}
+              exact
+              activeClassName={styles.active}
+              to='/'
+              onClick={() => setUserMenu(false)}
+            >
               Home
             </NavLink>
 
-            <NavLink id='menu' className={styles.textRoute} activeClassName={styles.active} to='/products' onClick={() => setUserMenu(false)}>
+            <NavLink
+              id='menu'
+              className={styles.textRoute}
+              activeClassName={styles.active}
+              to='/products'
+              onClick={() => setUserMenu(false)}
+            >
               Menu
             </NavLink>
 
-            <NavLink className={styles.textRoute} activeClassName={styles.active} to='/contact' onClick={() => setUserMenu(false)}>
+            <NavLink
+              className={styles.textRoute}
+              activeClassName={styles.active}
+              to='/contact'
+              onClick={() => setUserMenu(false)}
+            >
               Contacto
             </NavLink>
           </div>
-          <div className={styles.userData} onClick={() => setUserMenu(!userMenu)}>
+          <div
+            className={styles.userData}
+            onClick={() => setUserMenu(!userMenu)}
+          >
             {props.user && (
-              <h2 data-usermenu={true} id='userName' className={styles.userName}>
+              <h2
+                data-usermenu={true}
+                id='userName'
+                className={styles.userName}
+              >
                 {props.user.data.firstName}
               </h2>
             )}
@@ -76,11 +105,21 @@ const Header = (props) => {
             ></div>
           </div>
 
-          <RiMenuFoldLine data-usermenu={true} onClick={() => setUserMenu(!userMenu)} className={styles.menuHamburguesa} />
+          <RiMenuFoldLine
+            data-usermenu={true}
+            onClick={() => setUserMenu(!userMenu)}
+            className={styles.menuHamburguesa}
+          />
         </nav>
       </div>
       {userMenu && (
-        <div className={props.user ? styles.userMenuContainerLogged : styles.userMenuContainer}>
+        <div
+          className={
+            props.user
+              ? styles.userMenuContainerLogged
+              : styles.userMenuContainer
+          }
+        >
           <div className={styles.userMenu}>
             {!props.user ? (
               <>
@@ -106,7 +145,9 @@ const Header = (props) => {
                 <MyNavLink page={'Mis Favoritos'} path={'/profile/fav'} />
                 <MyNavLink page={'Mis Pedidos'} path={'/profile/his'} />
                 <MyNavLink page={'Mi Cuenta'} path={'/profile/data'} />
-                {props?.user?.data?.admin?.flag && <MyNavLink page={'Dashboard'} path={'/admin/dashboard'} />}
+                {props?.user?.data?.admin?.flag && (
+                  <MyNavLink page={'Dashboard'} path={'/admin/dashboard'} />
+                )}
                 <Link
                   className={styles.textRoute}
                   to='/'

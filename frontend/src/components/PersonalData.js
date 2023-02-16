@@ -91,7 +91,7 @@ const PersonalData = ({ user, updateUser }) => {
                     ? user.google || user.admin.flag
                       ? user.src
                       : user.src !== 'assets/user.png'
-                      ? 'https://quickly-food.herokuapp.com/' + user.src
+                      ? 'https://quickly-food.rafaelmiandev.com/' + user.src
                       : '/assets/user.png'
                     : '/assets/user.png'
                 }")`,
@@ -100,7 +100,12 @@ const PersonalData = ({ user, updateUser }) => {
           </div>
           <span className={styles.submitPhoto}>Cambiar foto</span>
         </label>
-        <input id='imgUpdate' type='file' onChange={submitFile} style={{ display: 'none' }} />
+        <input
+          id='imgUpdate'
+          type='file'
+          onChange={submitFile}
+          style={{ display: 'none' }}
+        />
         <div className={styles.containForm}>
           {!user ? (
             <Preloader />

@@ -8,7 +8,14 @@ import { connect } from 'react-redux'
 import userActions from '../redux/actions/userActions'
 import CardTost from './CardTost'
 
-const ProductCard = ({ product, setModal, user, userData, favHandler, index }) => {
+const ProductCard = ({
+  product,
+  setModal,
+  user,
+  userData,
+  favHandler,
+  index,
+}) => {
   const [stopper, setStopper] = useState(true)
   const [liked, setLiked] = useState(false)
   useEffect(() => {
@@ -51,14 +58,27 @@ const ProductCard = ({ product, setModal, user, userData, favHandler, index }) =
   }
   return (
     <div className={styles.product} id={product._id}>
-      {cardTost.view && <CardTost properties={cardTost} setCardTost={setCardTost} />}
+      {cardTost.view && (
+        <CardTost properties={cardTost} setCardTost={setCardTost} />
+      )}
 
       <div className={styles.productBox}>
-        <div className={styles.productImg} style={{ backgroundImage: `url("https://quickly-food.herokuapp.com${product.img}")` }}>
+        <div
+          className={styles.productImg}
+          style={{
+            backgroundImage: `url("https://quickly-food.rafaelmiandev.com${product.img}")`,
+          }}
+        >
           {!liked ? (
-            <BsBookmarkStar className={styles.fav} onClick={() => favClickHandler('addFav', product._id)} />
+            <BsBookmarkStar
+              className={styles.fav}
+              onClick={() => favClickHandler('addFav', product._id)}
+            />
           ) : (
-            <BsBookmarkStarFill className={styles.fav} onClick={() => favClickHandler('deleteFav', product._id)} />
+            <BsBookmarkStarFill
+              className={styles.fav}
+              onClick={() => favClickHandler('deleteFav', product._id)}
+            />
           )}
         </div>
         <div className={styles.productInfo}>
@@ -76,9 +96,20 @@ const ProductCard = ({ product, setModal, user, userData, favHandler, index }) =
         <div className={styles.calification}>
           <Stack spacing={1}>
             {!user ? (
-              <Rating name='half-rating-read' defaultValue={product.score} precision={0.1} readOnly />
+              <Rating
+                name='half-rating-read'
+                defaultValue={product.score}
+                precision={0.1}
+                readOnly
+              />
             ) : (
-              <Rating className={styles.rating} style={{ backgroundColor: 'yelow' }} name='half-rating' defaultValue={product.score} precision={0.1} />
+              <Rating
+                className={styles.rating}
+                style={{ backgroundColor: 'yelow' }}
+                name='half-rating'
+                defaultValue={product.score}
+                precision={0.1}
+              />
             )}
           </Stack>
         </div>
@@ -100,7 +131,10 @@ const ProductCard = ({ product, setModal, user, userData, favHandler, index }) =
           }
         }}
       >
-        <MdShoppingCart style={{ color: 'white', fontSize: '1.8em', marginRight: '5%' }} /> +
+        <MdShoppingCart
+          style={{ color: 'white', fontSize: '1.8em', marginRight: '5%' }}
+        />{' '}
+        +
       </button>
     </div>
   )
