@@ -17,13 +17,18 @@ const Products = (props) => {
 
   useEffect(() => {
     props.getProducts()
-    props.history.location.pathname === '/products' && props.history.push('/products/all')
+    props.history.location.pathname === '/products' &&
+      props.history.push('/products/all')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   useEffect(() => {
     setProducts(
       props.products?.filter((prod) => {
-        let path = window.location.pathname.split('/')[window.location.pathname.split('/').length - 1]
+        let path =
+          window.location.pathname.split('/')[
+            window.location.pathname.split('/').length - 1
+          ]
+        path = path.replaceAll('%20', ' ')
         return path === 'all' || path === prod.category
       })
     )
@@ -52,14 +57,33 @@ const Products = (props) => {
     <div className={styles.mainProducts}>
       <div className={styles.categories}>
         <div className={styles.categoriesList}>
-          <BiCategory style={{ color: '#fe6849', fontSize: '1.5em', marginRight: '5%' }} />
+          <BiCategory
+            style={{ color: '#fe6849', fontSize: '1.5em', marginRight: '5%' }}
+          />
           <p className={styles.categoriesTitle}> Categorias</p>
         </div>
         <div className={styles.boxShop}>
-          <p className={styles.welcome}>Hola {props.user && props.user.firstName}! ¿Qué vas a comer hoy?</p>
-          <button id='cart' className={styles.carritoBtn} onClick={() => props.history.push('/cart')}>
-            <span style={{ marginRight: '0.7rem', color: 'white', fontSize: '1rem' }}>{props?.cart?.length + ' '}</span>
-            <MdShoppingCart style={{ color: 'white', fontSize: '1.8em', marginRight: '5%' }} /> Carrito
+          <p className={styles.welcome}>
+            Hola {props.user && props.user.firstName}! ¿Qué vas a comer hoy?
+          </p>
+          <button
+            id='cart'
+            className={styles.carritoBtn}
+            onClick={() => props.history.push('/cart')}
+          >
+            <span
+              style={{
+                marginRight: '0.7rem',
+                color: 'white',
+                fontSize: '1rem',
+              }}
+            >
+              {props?.cart?.length + ' '}
+            </span>
+            <MdShoppingCart
+              style={{ color: 'white', fontSize: '1.8em', marginRight: '5%' }}
+            />{' '}
+            Carrito
           </button>
         </div>
       </div>
@@ -71,7 +95,12 @@ const Products = (props) => {
           ) : (
             <div className={styles2.products}>
               {products.map((prod, index) => (
-                <ProductCard index={index} product={prod} key={'product' + index} setModal={setModal} />
+                <ProductCard
+                  index={index}
+                  product={prod}
+                  key={'product' + index}
+                  setModal={setModal}
+                />
               ))}
               {mod && <Product product={product} setMod={setMod} />}
             </div>
