@@ -1,3 +1,5 @@
+import apiClient from '../../api/client'
+
 let initialState = {
   token: null,
   user: null,
@@ -12,6 +14,7 @@ const userReducer = (state = initialState, action) => {
     case 'LOG_IN':
       let { token, userData, user } = action.payload
       localStorage.setItem('token', token)
+      apiClient.defaults.headers['Authorization'] = `Bearer ${token}`
       localStorage.setItem('cart', JSON.stringify(userData.cart))
       return {
         ...state,
