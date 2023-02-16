@@ -2,14 +2,17 @@ const User = require('../../models/User')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const transport = require('../../config/transport')
-const stripe = require('stripe')('sk_test_51JiHmiD8MtlvyDMX4r6FFdMzuJU3h60v7z60iYIo1n2u4b5PeWUzzigyKCiPpMkoHXIJ4u0SWDvjsQ3BTXPz0wpn00mAvDx3wa')
+const stripe = require('stripe')(
+  'sk_test_51JiHmiD8MtlvyDMX4r6FFdMzuJU3h60v7z60iYIo1n2u4b5PeWUzzigyKCiPpMkoHXIJ4u0SWDvjsQ3BTXPz0wpn00mAvDx3wa'
+)
 
 const userControllers = {
   signUp: async (req, res, next) => {
     const { firstName, lastName, password, email, google, src } = req.body
     const pw = bcrypt.hashSync(password)
     try {
-      if (await User.findOne({ 'data.email': email })) throw new Error('Ya estás registrado')
+      if (await User.findOne({ 'data.email': email }))
+        throw new Error('Ya estás registrado')
       let customerId = await stripe.customers.create({
         description: firstName + ' ' + lastName,
       })
@@ -20,10 +23,17 @@ const userControllers = {
       let picture
       if (req.files) {
         const { fileImg } = req.files
-        picture = `${newUser._id}.${fileImg.name.split('.')[fileImg.name.split('.').length - 1]}`
-        fileImg.mv(`${__dirname}/../../assets/${newUser._id}.${fileImg.name.split('.')[fileImg.name.split('.').length - 1]}`, (err) => {
-          if (err) return console.log(err)
-        })
+        picture = `${newUser._id}.${
+          fileImg.name.split('.')[fileImg.name.split('.').length - 1]
+        }`
+        fileImg.mv(
+          `${__dirname}/../../assets/${newUser._id}.${
+            fileImg.name.split('.')[fileImg.name.split('.').length - 1]
+          }`,
+          (err) => {
+            if (err) return console.log(err)
+          }
+        )
       } else {
         picture = src ? src : 'assets/user.png'
       }
@@ -43,7 +53,9 @@ const userControllers = {
       return next()
     } catch (error) {
       console.log(error)
-      error.message.includes('Google') ? res.json({ error: [{ message: error.message }] }) : res.json({ success: false, error: error.message })
+      error.message.includes('Google')
+        ? res.json({ error: [{ message: error.message }] })
+        : res.json({ success: false, error: error.message })
     }
   },
   logIn: async (req, res) => {
@@ -52,11 +64,13 @@ const userControllers = {
       let user = await User.findOne({ 'data.email': email })
         .populate({ path: 'cart.productId', model: 'product' })
         .populate({ path: 'ordersId', model: 'order' })
-      if (!user) throw new Error('No encotramos una cuenta asociada a ese email')
+      if (!user)
+        throw new Error('No encotramos una cuenta asociada a ese email')
       if (user.data.google && !google) {
         throw new Error('Debes iniciar sesión con Google')
       }
-      let match = user && bcrypt.compareSync(password, user.data.password)
+      let match =
+        google || (user && bcrypt.compareSync(password, user.data.password))
       if (!match) throw new Error('Contraseña incorrecta')
       const token = jwt.sign({ ...user }, process.env.SECRETORKEY)
       res.json({
@@ -76,17 +90,33 @@ const userControllers = {
   },
   updateUser: async (req, res) => {
     const { _id } = req.user
-    const { action, userData, newPaymentCard, paymentCardId, newAddress, addressId, password, currentPassword } = req.body
+    const {
+      action,
+      userData,
+      newPaymentCard,
+      paymentCardId,
+      newAddress,
+      addressId,
+      password,
+      currentPassword,
+    } = req.body
     let src
     if (req.files) {
       const { fileImg } = req.files
-      src = `${_id}v${req.user.__v + 1}.${fileImg.name.split('.')[fileImg.name.split('.').length - 1]}`
-      fileImg.mv(`${__dirname}/../../assets/${_id}v${req.user.__v + 1}.${fileImg.name.split('.')[fileImg.name.split('.').length - 1]}`, (err) => {
-        if (err) {
-          res.json({ success: false, error: err.message })
-          return console.log(err)
+      src = `${_id}v${req.user.__v + 1}.${
+        fileImg.name.split('.')[fileImg.name.split('.').length - 1]
+      }`
+      fileImg.mv(
+        `${__dirname}/../../assets/${_id}v${req.user.__v + 1}.${
+          fileImg.name.split('.')[fileImg.name.split('.').length - 1]
+        }`,
+        (err) => {
+          if (err) {
+            res.json({ success: false, error: err.message })
+            return console.log(err)
+          }
         }
-      })
+      )
     }
 
     let operation =
@@ -112,7 +142,11 @@ const userControllers = {
     let options = { new: true }
     try {
       if (!operation) throw new Error()
-      if (action === 'updatePass' && !bcrypt.compareSync(currentPassword, req.user.data.password)) throw new Error('Contraseña incorrecta')
+      if (
+        action === 'updatePass' &&
+        !bcrypt.compareSync(currentPassword, req.user.data.password)
+      )
+        throw new Error('Contraseña incorrecta')
       let user = await User.findOneAndUpdate({ _id }, operation, options)
         .populate({ path: 'cart.productId', model: 'product' })
         .populate({ path: 'ordersId', model: 'order' })
@@ -195,7 +229,12 @@ const userControllers = {
       let options = {
         from: 'miComida <micomidaweb@gmail.com>', //de
         to: email, //para
-        subject: action === 'sign' ? 'Bienvenido' : action === 'orderConfirm' ? 'Orden confirmada' : 'Orden cancelada',
+        subject:
+          action === 'sign'
+            ? 'Bienvenido'
+            : action === 'orderConfirm'
+            ? 'Orden confirmada'
+            : 'Orden cancelada',
         html: html(firstName, action),
       }
       transport.sendMail(options, (err, info) => {
