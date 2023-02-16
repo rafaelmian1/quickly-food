@@ -27,7 +27,7 @@ const userControllers = {
           fileImg.name.split('.')[fileImg.name.split('.').length - 1]
         }`
         fileImg.mv(
-          `${__dirname}/../../assets/users/${newUser._id}.${
+          `${__dirname}/../../client/build/assets/users/${newUser._id}.${
             fileImg.name.split('.')[fileImg.name.split('.').length - 1]
           }`,
           (err) => {
